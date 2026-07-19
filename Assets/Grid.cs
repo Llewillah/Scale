@@ -8,7 +8,7 @@ public class Grid {
     float cellSize;
     Vector2 originPos;
 
-    public Grid(int width, int height, float cellSize, Vector2 originPos)
+    public Grid(int width, int height, float cellSize, Vector2 originPos, SpawningManager sM)
     {
         this.width = width;
         this.height = height;
@@ -16,12 +16,16 @@ public class Grid {
         this.originPos = originPos;
 
         grid = new Tile[width, height];
+        GameObject gridObj = new GameObject();
+        gridObj.name = "Grid";
 
-        for (int i = 0; i < width; i++)
+
+        for (int x = 0; x < width; x++)
         {
-            for (int j = 0; j < height; j++)
+            for (int y = 0; y < height; y++)
             {
-                //grid[i, j].tile = UnitSpawner.Instance.SpawnTile(GetWorldPos(i, j) + Vector2.one * cellSize / 2);
+                grid[x, y] = sM.SpawnTile(GetWorldPos(x,y), gridObj.transform);
+                grid[x, y].SetUp(x, y);
             }
         }
     }

@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 enum TileState 
 { 
-    clear, water, road
+    clear, water, road, building
 }
 
 public class Tile : MonoBehaviour
@@ -12,5 +13,11 @@ public class Tile : MonoBehaviour
 
     TileState curState;
 
+    public void SetUp(int x, int y) 
+    {
+        this.x = x;
+        this.y = y;
 
+        curState = TileState.clear;
+    }
 }
