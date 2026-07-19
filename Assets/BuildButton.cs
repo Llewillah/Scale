@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 
 
 public class BuildButton : MonoBehaviour, IClickable
 {
     GridManager gM;
+    public TMP_Text text;
     int index;
 
     public void SetUp(GridManager gm) 
@@ -18,6 +20,6 @@ public class BuildButton : MonoBehaviour, IClickable
 
     public void OnClick() 
     {
-        gM.Build(index);
+        gM.SelectBuilding(index);
     }
 }

@@ -1,83 +1,109 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum BuildState
 {
-    factory, collector, road
+    factory, collector, road, none
 }
 
 public class GridManager : MonoBehaviour
 {
-    
-
     public int width, height;
     public float cellSize;
     public Vector2 gridStartPos;
 
     Grid grid;
 
-    public BuildButton[] buttons;
+    
     public Collector[] collectors;
     public Factory[] factories;
 
     public GameObject tempBuildIcon;
 
-    BuildState state;
+    BuildState state = BuildState.none;
 
-    public void SetUp(SpawningManager sM)
+    int curSelected;
+
+    BuildingsManager bM;
+    UIManager uiM;
+    public void SetUp(SpawningManager sM, BuildingsManager bM, UIManager ui)
     {
+        this.bM = bM;
+        uiM = ui;
         grid = new Grid(width, height, cellSize, gridStartPos, sM);
         tempBuildIcon.SetActive(false);
-
-        foreach (BuildButton b in buttons)
-        {
-            b.SetUp(this);
-            b.gameObject.SetActive(false);
-        }
+        tempBuildIcon.GetComponent<TempBuildIcon>().SetUp(this);
     }
 
     public void DoUpdate()
     {
         grid.DrawGrid();
-    }
 
-    public void SetFactoryButtons()
-    {
-        state = BuildState.factory;
-
-        for (int i = 0; i < buttons.Length; i++)
+        if (tempBuildIcon.activeSelf)
         {
-            if (i < factories.Length)
-            {
-                buttons[i].SetButton(i);
-                buttons[i].gameObject.SetActive(true);
-            }
+            tempBuildIcon.transform.position = grid.GetWorldGridTest(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
         }
     }
 
-    public void SetCollectorButtons()
+    public void SelectBuilding(int index)
     {
-        state = BuildState.collector;
+        curSelected = index;
+        tempBuildIcon.SetActive(true);
 
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            if (i < collectors.Length)
-            {
-                buttons[i].SetButton(i);
-                buttons[i].gameObject.SetActive(true);
-            }
-        }
-    }
-
-    public void Build(int index)
-    {
         switch (state)
         {
+            case BuildState.none:
+                tempBuildIcon.SetActive(false);
+                if (index == 0)
+                {
+                    uiM.SetCollectorButtons(collectors);
+                    state = BuildState.collector;
+                }
+                else if (index == 1) 
+                {
+                    uiM.SetFactoryButtons(factories);
+                    state = BuildState.factory;
+                }
+                break;
             case BuildState.factory:
+                tempBuildIcon.GetComponent<SpriteRenderer>().sprite = factories[index].sprite;
+                uiM.HideUI();
                 break;
             case BuildState.collector:
+                tempBuildIcon.GetComponent<SpriteRenderer>().sprite = collectors[index].sprite;
+                uiM.HideUI();
                 break;
             case BuildState.road:
                 break;
         }
+    }
+
+    public void Build()
+    {
+        if (grid.CheckEmpty(tempBuildIcon.transform.position)) 
+        {
+            switch (state)
+            {
+                case BuildState.factory:
+                    bM.AddFactory(factories[curSelected], tempBuildIcon.transform.position);
+                    break;
+                case BuildState.collector:
+                    bM.AddCollector(collectors[curSelected], tempBuildIcon.transform.position);
+                    break;
+                case BuildState.road:
+                    break;
+            }
+
+            state = BuildState.none;
+            tempBuildIcon.SetActive(false);
+            grid.SetBuilding(tempBuildIcon.transform.position);
+            uiM.UnhideUI();
+        }
+    }
+
+    public void BackButton() 
+    {
+        state = BuildState.none;
     }
 }

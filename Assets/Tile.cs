@@ -1,7 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-enum TileState 
+public enum TileState 
 { 
     clear, water, road, building
 }
@@ -19,5 +19,15 @@ public class Tile : MonoBehaviour
         this.y = y;
 
         curState = TileState.clear;
+    }
+
+    public bool CheckClear() 
+    {
+        return curState == TileState.clear;
+    }
+
+    public void SetState(TileState state) 
+    { 
+        curState = state;
     }
 }

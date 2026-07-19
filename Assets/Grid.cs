@@ -71,4 +71,15 @@ public class Grid {
         return GetWorldPos(x, y);
     }
 
+    public bool CheckEmpty(Vector2 pos) 
+    {
+        GetGridPos(pos, out int x, out int y);
+        return grid[x, y].CheckClear();
+    }
+
+    public void SetBuilding(Vector2 pos) 
+    {
+        GetGridPos(pos, out int x, out int y);
+        grid[x, y].SetState(TileState.building);
+    }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CollectorBuilding : MonoBehaviour, IClickable
 {
-    Collector colScriptable;
+    public Collector colScriptable;
     float timer = 0;
 
     //Resource, amount stored
