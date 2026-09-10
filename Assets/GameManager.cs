@@ -18,5 +18,6 @@ public class GameManager : MonoBehaviour
     {
         gM.DoUpdate();
         bM.DoUpdate();
+        uiM.DoUpdate();
     }
 }

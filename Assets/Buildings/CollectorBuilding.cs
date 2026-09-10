@@ -8,7 +8,7 @@ public class CollectorBuilding : MonoBehaviour, IClickable
     float timer = 0;
 
     //Resource, amount stored
-    Dictionary<Resource, int> storage = new Dictionary<Resource, int>();
+    public Dictionary<Resource, int> storage = new Dictionary<Resource, int>();
 
     public bool display = false;
     bool active = true;

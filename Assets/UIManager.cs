@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -9,6 +10,9 @@ public class UIManager : MonoBehaviour
     public TMP_Text displayText;
 
     GridManager gM;
+
+    CollectorBuilding curColSelec;
+    FactoryBuilding curFacSelec;
     public void SetUp(GridManager gM)
     {
         this.gM = gM;
@@ -23,6 +27,18 @@ public class UIManager : MonoBehaviour
         {
             b.SetUp(gM);
             b.gameObject.SetActive(false);
+        }
+    }
+
+    public void DoUpdate() 
+    {
+        if (curColSelec != null)
+        {
+            DisplayCollector(curColSelec);
+        }
+        else if (curFacSelec != null) 
+        {
+            DisplayFactory(curFacSelec);
         }
     }
 
@@ -99,6 +115,7 @@ public class UIManager : MonoBehaviour
 
     public void SetBuildMenu(bool active)
     {
+        
         if (active) 
         {
             gM.BackButton();
@@ -118,6 +135,8 @@ public class UIManager : MonoBehaviour
         buildButtons[5].SetButton(5);
         buildButtons[5].gameObject.SetActive(active);
         buildButtons[5].text.text = "Roads";
+
+        
     }
 
     void ResetBuildButtons()
@@ -127,6 +146,10 @@ public class UIManager : MonoBehaviour
             b.gameObject.SetActive(false);
             b.text.text = "Shouldnt see this";
         }
+
+        curColSelec = null;
+        curFacSelec = null;
+        displayText.gameObject.SetActive(false);
     }
 
     //========================================
@@ -136,22 +159,33 @@ public class UIManager : MonoBehaviour
     public void DisplayCollector(CollectorBuilding col) 
     {
         SetBuildMenu(false);
-
+        curColSelec = col;
         displayBox.SetActive(true);
         displayText.gameObject.SetActive(true);
         displayText.text = "";
 
-        displayText.text += col.colScriptable.name;
+        displayText.text += col.colScriptable.name + "\n";
 
-
+        for (int i = 0; i < col.colScriptable.outputs.Length; i++)
+        {
+            displayText.text += "\n" + col.colScriptable.outputs[i].name + ": " + col.storage[col.colScriptable.outputs[i]] + "/" + col.colScriptable.maxResource;
+        }
     }
 
     public void DisplayFactory(FactoryBuilding fac) 
     {
         SetBuildMenu(false);
+        curFacSelec = fac;
 
         displayBox.SetActive(true);
         displayText.gameObject.SetActive(true);
         displayText.text = "";
+
+        displayText.text += fac.facScriptable.name + "\n";
+
+        for (int i = 0; i < fac.facScriptable.outputs.Length; i++)
+        {
+            displayText.text += "\n" + fac.facScriptable.outputs[i].name + ": " + fac.storage[fac.facScriptable.outputs[i]] + "/" + fac.facScriptable.maxResource;
+        }
     }
 }
