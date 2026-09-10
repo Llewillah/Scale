@@ -15,7 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 821588184, guid: 89ae3587eb2d6b44299e575767f443c7, type: 3}
   buildCost: 0
   maxResource: 20
-  collectTime: 0
+  collectTime: 3
   outputs:
   - {fileID: 11400000, guid: ac29129079be94a4191418378ad5f06f, type: 2}
   outputAmounts: 04000000
