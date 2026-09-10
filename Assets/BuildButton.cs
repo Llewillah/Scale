@@ -22,4 +22,6 @@ public class BuildButton : MonoBehaviour, IClickable
     {
         gM.SelectBuilding(index);
     }
+
+    public void OnRightClick() { }
 }

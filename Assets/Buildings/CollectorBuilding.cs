@@ -53,4 +53,6 @@ public class CollectorBuilding : MonoBehaviour, IClickable
     {
         display = true;
     }
+
+    public void OnRightClick() { }
 }

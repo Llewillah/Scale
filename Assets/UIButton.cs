@@ -14,4 +14,6 @@ public class UIButton : MonoBehaviour, IClickable
     {
         uiM.DoMenuButton(index);
     }
+
+    public void OnRightClick() { }
 }

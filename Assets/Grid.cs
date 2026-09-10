@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid {
@@ -81,5 +82,16 @@ public class Grid {
     {
         GetGridPos(pos, out int x, out int y);
         grid[x, y].SetState(TileState.building);
+    }
+
+    public void SetRoad(List<Vector2Int> path) 
+    {
+        foreach (Vector2Int t in path)
+        {
+            grid[t.x,t.y].SetState(TileState.road);
+            
+        }
+
+        // change the sprite of each tile to correct road based on road dir
     }
 }

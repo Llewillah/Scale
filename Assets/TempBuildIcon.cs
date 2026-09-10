@@ -12,4 +12,9 @@ public class TempBuildIcon : MonoBehaviour, IClickable
     {
         gM.Build();
     }
+
+    public void OnRightClick() 
+    {
+        gM.CancelBuild();
+    }
 }

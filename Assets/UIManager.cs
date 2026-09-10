@@ -115,6 +115,9 @@ public class UIManager : MonoBehaviour
         buildButtons[1].gameObject.SetActive(active);
         buildButtons[1].text.text = "Factories";
 
+        buildButtons[5].SetButton(5);
+        buildButtons[5].gameObject.SetActive(active);
+        buildButtons[5].text.text = "Roads";
     }
 
     void ResetBuildButtons()
