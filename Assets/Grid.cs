@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -93,5 +94,32 @@ public class Grid {
         }
 
         // change the sprite of each tile to correct road based on road dir
+    }
+
+    public bool CheckRoad(List<Vector2Int> path) 
+    {
+        bool canBuild = true;
+        foreach (Vector2Int t in path)
+        {
+            if (CheckEmpty(t))
+            {
+                grid[t.x, t.y].ChangeColour(Color.blue);
+            }
+            else 
+            {
+                grid[t.x, t.y].ChangeColour(Color.red);
+                canBuild = false;
+            }
+        }
+
+        return canBuild;
+    }
+
+    public void ResetTileColour() 
+    {
+        foreach (Tile t in grid) 
+        { 
+            t.ChangeColour(Color.green);
+        }
     }
 }

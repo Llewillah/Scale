@@ -30,4 +30,9 @@ public class Tile : MonoBehaviour
     { 
         curState = state;
     }
+
+    public void ChangeColour(Color colour) 
+    { 
+        GetComponent<SpriteRenderer>().color = colour;
+    }
 }
