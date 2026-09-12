@@ -30,6 +30,8 @@ public class Grid {
                 grid[x, y].SetUp(x, y);
             }
         }
+
+        ResetTileColour();
     }
 
     //Draws the grid purely for testing
@@ -52,7 +54,7 @@ public class Grid {
     }
 
     //converts world pos to grid pos
-    void GetGridPos(Vector2 pos, out int x, out int y)
+    public void GetGridPos(Vector2 pos, out int x, out int y)
     {
         pos -= originPos;
 
@@ -85,29 +87,37 @@ public class Grid {
         grid[x, y].SetState(TileState.building);
     }
 
-    public void SetRoad(List<Vector2Int> path) 
+    public void SetRoad(List<Vector2> path) 
     {
-        foreach (Vector2Int t in path)
+        foreach (Vector2 t in path)
         {
-            grid[t.x,t.y].SetState(TileState.road);
-            
+            int x = (int)t.x;
+            int y = (int)t.y;
+
+            grid[x,y].SetState(TileState.road);
+            grid[x, y].ChangeColour(Color.black);
         }
 
         // change the sprite of each tile to correct road based on road dir
+        ResetTileColour();
     }
 
-    public bool CheckRoad(List<Vector2Int> path) 
+    public bool CheckRoad(List<Vector2> path) 
     {
         bool canBuild = true;
-        foreach (Vector2Int t in path)
+        foreach (Vector2 t in path)
         {
-            if (CheckEmpty(t))
+
+            int x = (int)t.x;
+            int y = (int)t.y;
+
+            if (grid[x, y].CheckClear())
             {
-                grid[t.x, t.y].ChangeColour(Color.blue);
+                grid[x, y].ChangeColour(Color.blue);
             }
-            else 
+            else
             {
-                grid[t.x, t.y].ChangeColour(Color.red);
+                grid[x, y].ChangeColour(Color.red);
                 canBuild = false;
             }
         }
@@ -118,8 +128,86 @@ public class Grid {
     public void ResetTileColour() 
     {
         foreach (Tile t in grid) 
-        { 
-            t.ChangeColour(Color.green);
+        {
+            if (t.curState == TileState.road)
+            {
+                t.ChangeColour(Color.black);
+            }
+            else 
+            {
+                t.ChangeColour(Color.lightGreen);
+            }
         }
+    }
+
+    public bool TraverseRoad(Vector2 startPos, Vector2 endPos) 
+    {
+        GetGridPos(startPos, out int startX, out int startY);
+        GetGridPos(endPos, out int endX, out int endY);
+
+        Stack<Tile> stack = new Stack<Tile>();
+        stack.Push(grid[startX, startY]);
+
+        
+        while (stack.Count > 0) 
+        { 
+            Tile cur = stack.Pop();
+
+            //check all neighburs for road + add roads to stack
+            //also check if next tile is the end
+            if (cur.x + 1 < width) 
+            {
+                if (cur.x + 1 == endX && cur.y == endY) 
+                {
+                    return true;
+                }
+
+                if (grid[cur.x + 1, cur.y].curState == TileState.road) 
+                {
+                    stack.Push(grid[cur.x + 1, cur.y]);
+                }
+            }
+
+            if (cur.x - 1 >= 0) 
+            {
+                if (cur.x - 1 == endX && cur.y == endY)
+                {
+                    return true;
+                }
+
+                if (grid[cur.x - 1, cur.y].curState == TileState.road)
+                {
+                    stack.Push(grid[cur.x - 1, cur.y]);
+                }
+            }
+
+            if (cur.y + 1 < height)
+            {
+                if (cur.y + 1 == endY && cur.x == endX)
+                {
+                    return true;
+                }
+
+                if (grid[cur.x, cur.y + 1].curState == TileState.road)
+                {
+                    stack.Push(grid[cur.x, cur.y + 1]);
+                }
+            }
+
+            if (cur.y - 1 >= 0)
+            {
+                if (cur.y - 1 == endY && cur.x == endX)
+                {
+                    return true;
+                }
+
+                if (grid[cur.x, cur.y - 1].curState == TileState.road)
+                {
+                    stack.Push(grid[cur.x, cur.y - 1]);
+                }
+            }
+        }
+
+        return false;
     }
 }

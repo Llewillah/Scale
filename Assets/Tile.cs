@@ -9,9 +9,9 @@ public enum TileState
 public class Tile : MonoBehaviour
 {
     Sprite sprite;
-    int x, y;
+    public int x, y;
 
-    TileState curState;
+    public TileState curState;
 
     public void SetUp(int x, int y) 
     {
