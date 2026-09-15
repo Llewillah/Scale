@@ -57,6 +57,7 @@ public class GridManager : MonoBehaviour
         {
             prevFrameTempPos = grid.GetWorldGridTest(tempBuildIcon.transform.position);
             SetRoads(startRoadPos, tempBuildIcon.transform.position);
+            grid.CheckRoad(curRoads);
         }
     }
 
@@ -126,8 +127,15 @@ public class GridManager : MonoBehaviour
                     else
                     {
                         Debug.Log("end the roads");
-                        grid.SetRoad(curRoads);
-                        CancelBuild();
+                        if (grid.CheckRoad(curRoads))
+                        {
+                            grid.SetRoad(curRoads);
+                            CancelBuild();
+                        }
+                        else 
+                        { 
+                            //Display error cause cant build
+                        }
                     }
                     break;
             }            
@@ -174,7 +182,7 @@ public class GridManager : MonoBehaviour
             curRoads.Add(new Vector2(startX, startY));
         }
 
-        grid.CheckRoad(curRoads);
+        
     }
 
     public void BackButton() 
